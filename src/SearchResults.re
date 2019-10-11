@@ -36,8 +36,6 @@ let make = (~search) => {
         <p>{ReasonReact.string("Loading...")}</p>
       }
     | (Some(_), Error(error)) => <p>{ReasonReact.string(error)}</p>
-    | (Some(_), Done(results)) => {
-        <div><pre>{ReasonReact.string(results)}</pre></div>
-    }
+    | (Some(_), Done(results)) => <pre>{ReasonReact.string(results)}</pre>
   }
 };

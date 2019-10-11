@@ -8,21 +8,34 @@ let make = () => {
     setSearch(_ => Some(keyword));
   };
 
-  <div>
-    <h1>{ReasonReact.string("SERP Web")}</h1>
-    <form action="">
-      <input
-        type_="text"
-        name="keyword"
-        onChange={event => onKeywordChange(ReactEvent.Form.target(event)##value)}
-        value={keyword}
-      />
-      <input
-        type_="submit"
-        value="Search"
-        onClick={handleSearch}
-      />
-    </form>
-    <div><SearchResults search /></div>
-  </div>
+  <>
+    <section className="section">
+      <form className="container">
+        <div className="field has-addons">
+          <p className="control">
+            <input
+              className="input"
+              type_="text"
+              name="keyword"
+              onChange={event =>
+                onKeywordChange(ReactEvent.Form.target(event)##value)
+              }
+              value={keyword}
+            />
+          </p>
+          <input
+            className="button is-info"
+            type_="submit"
+            value="Search"
+            onClick={handleSearch}
+          />
+        </div>
+      </form>
+    </section>
+    <section className="section">
+      <div className="container">
+        <SearchResults search />
+      </div>
+    </section>
+  </>
 };
