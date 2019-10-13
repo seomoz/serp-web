@@ -13,17 +13,18 @@ and entry = {
   related: list(string),
 };
 
-module Decode {
+module Decode = {
   let entry = (type_, json) => {
-    let prop = switch type_ {
+    let prop =
+      switch (type_) {
       | Keywords => "related_keywords"
       | Questions => "related_questions"
       | Searches => "related_searches"
-    };
+      };
     Json.Decode.{
       topic: json |> field("topic", string),
       related: json |> field(prop, list(string)),
-    }
+    };
   };
 
   let response = json =>
@@ -32,4 +33,4 @@ module Decode {
       questions: json |> field("related_questions", list(entry(Questions))),
       searches: json |> field("related_searches", list(entry(Searches))),
     };
-}
+};

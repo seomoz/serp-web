@@ -20,22 +20,20 @@ let make = () => {
               onChange={event =>
                 onKeywordChange(ReactEvent.Form.target(event)##value)
               }
-              value={keyword}
+              value=keyword
             />
           </p>
           <input
             className="button is-info"
             type_="submit"
             value="Search"
-            onClick={handleSearch}
+            onClick=handleSearch
           />
         </div>
       </form>
     </section>
     <section className="section">
-      <div className="container">
-        <SearchResults search />
-      </div>
+      <div className="container"> <SearchResults search /> </div>
     </section>
-  </>
+  </>;
 };
