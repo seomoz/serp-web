@@ -10,6 +10,7 @@ let make = (~entries) => {
 
   let setSearch = (search, event) => {
     ReactEvent.Mouse.preventDefault(event);
+    // TODO Update nav location to start a new search
     Js.log(search);
   };
 
@@ -45,7 +46,7 @@ let make = (~entries) => {
         <ul>
           {related
            |> List.map(related =>
-                <li>
+                <li key={related}>
                   <a href="#" onClick={setSearch(related)}>
                     {React.string(related)}
                   </a>
@@ -56,7 +57,7 @@ let make = (~entries) => {
         </ul>
       };
 
-    <li>
+    <li key={topic}>
       <span>
         {drawerControl(topic, Map.get(drawers, topic))}
         {React.string(" " ++ topic)}

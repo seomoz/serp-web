@@ -1,4 +1,5 @@
 type resultTypes =
+  | Graph
   | Keywords
   | Questions
   | Searches;
@@ -17,6 +18,7 @@ module Decode = {
   let entry = (type_, json) => {
     let prop =
       switch (type_) {
+      | Graph => ""
       | Keywords => "related_keywords"
       | Questions => "related_questions"
       | Searches => "related_searches"

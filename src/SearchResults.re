@@ -27,7 +27,6 @@ let make = (~search) => {
       Fetch.fetch("/api/search?keyword=" ++ encodeURIComponent(keyword))
       |> then_(Fetch.Response.text)
       |> then_(results => {
-           Js.log(results);
            setStatus(_status => Done(results));
            resolve();
          })
@@ -36,8 +35,7 @@ let make = (~search) => {
     ReasonReact.null;
   | (Some(_), InFlight) => <p> {ReasonReact.string("Loading...")} </p>
   | (Some(_), Error(error)) => <p> {ReasonReact.string(error)} </p>
-  | (Some(_), Done(results)) =>
-    Js.log(activeTab);
+  | (Some(keyword), Done(results)) =>
     let data = results |> Json.parseOrRaise |> Response.Decode.response;
     <>
       <div className="tabs">
@@ -57,6 +55,11 @@ let make = (~search) => {
               {React.string("Searches")}
             </a>
           </li>
+          <li className={activeTab == Graph ? "is-active" : ""}>
+            <a onClick={_ => setActiveTab(_ => Response.Graph)}>
+              {React.string("Graph")}
+            </a>
+          </li>
         </ul>
       </div>
       <div>
@@ -64,6 +67,7 @@ let make = (~search) => {
          | Keywords => <ResultTab entries={data.keywords} />
          | Questions => <ResultTab entries={data.questions} />
          | Searches => <ResultTab entries={data.searches} />
+         | Graph => <ResultGraph search=keyword results=data />
          }}
       </div>
     </>;
