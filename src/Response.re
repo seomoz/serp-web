@@ -4,35 +4,25 @@ type resultTypes =
   | Questions
   | Searches;
 
-type response = {
-  keywords: list(entry),
-  questions: list(entry),
-  searches: list(entry),
-}
+type response = list(entry)
 and entry = {
   topic: string,
-  related: list(string),
+  keywords: list(string),
+  questions: list(string),
+  searches: list(string),
 };
 
 module Decode = {
-  let entry = (type_, json) => {
-    let prop =
-      switch (type_) {
-      | Graph => ""
-      | Keywords => "related_keywords"
-      | Questions => "related_questions"
-      | Searches => "related_searches"
-      };
+  let entry = (json) => {
     Json.Decode.{
       topic: json |> field("topic", string),
-      related: json |> field(prop, list(string)),
+      keywords: json |> field("keywords", list(string)),
+      questions: json |> field("questions", list(string)),
+      searches: json |> field("searches", list(string)),
     };
   };
 
-  let response = json =>
-    Json.Decode.{
-      keywords: json |> field("related_keywords", list(entry(Keywords))),
-      questions: json |> field("related_questions", list(entry(Questions))),
-      searches: json |> field("related_searches", list(entry(Searches))),
-    };
+  let response = json : response => {
+    json |> Json.Decode.list(entry)
+  }
 };
