@@ -1,3 +1,7 @@
+// Looks a little funky, but this is to trick Reason into generating an import
+// directive for a sass file. This is pretty much just for Webpack
+[@bs.module "./styles/app.scss"] external _unused: string = "_";
+
 [@bs.val] external encodeURIComponent: string => string = "encodeURIComponent";
 [@bs.val] external decodeURIComponent: string => string = "decodeURIComponent";
 
@@ -33,9 +37,7 @@ let make = () => {
 
   let handleSearch = event => {
     ReactEvent.Mouse.preventDefault(event);
-    ReasonReactRouter.push(
-      "/?search=" ++ encodeURIComponent(keyword),
-    );
+    ReasonReactRouter.push("/?search=" ++ encodeURIComponent(keyword));
   };
 
   <>

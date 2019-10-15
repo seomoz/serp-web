@@ -1,0 +1,23 @@
+// https://bulma.io/documentation/customize/variables/
+
+$family-sans-serif: "Roboto", sans-serif;
+$family-serif: "Roboto Slab", Georgia, serif;
+
+h1, h2, h3, h4 {
+  font-family: $family-serif;
+}
+
+$blue: #0077B3;
+$yellow: #3594BA;
+
+$primary: $blue;
+$secondary: #FEE091;
+$info: #1876D2;
+$success: #268628;
+$warning: $secondary;
+$danger: #D63E3E;
+$link: $blue;
+$link-hover: lighten($blue, 20%);
+$link-active: #0077B3;
+
+@import "../../node_modules/bulma/bulma.sass";
