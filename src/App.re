@@ -1,11 +1,41 @@
+[@bs.val] external encodeURIComponent: string => string = "encodeURIComponent";
+[@bs.val] external decodeURIComponent: string => string = "decodeURIComponent";
+
 [@react.component]
 let make = () => {
+  let url = ReasonReactRouter.useUrl();
+  let search =
+    Js.String.split("&", url.search)
+    |> Array.to_list
+    |> List.map(Js.String.split("="))
+    |> List.filter(
+         fun
+         | [|"search", _|] => true
+         | _ => false,
+       )
+    |> (
+      fun
+      | [[|_key, search|]] => Some(decodeURIComponent(search))
+      | _ => None
+    );
+
   let (keyword, onKeywordChange) = React.useState(() => "");
-  let (search, setSearch) = React.useState(() => None);
+  React.useEffect1(
+    () =>
+      switch (search) {
+      | Some(search) =>
+        onKeywordChange(_ => search);
+        None;
+      | None => None
+      },
+    [|search|],
+  );
 
   let handleSearch = event => {
     ReactEvent.Mouse.preventDefault(event);
-    setSearch(_ => Some(keyword));
+    ReasonReactRouter.push(
+      "/?search=" ++ encodeURIComponent(keyword),
+    );
   };
 
   <>

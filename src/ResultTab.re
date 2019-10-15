@@ -1,3 +1,5 @@
+[@bs.val] external encodeURIComponent: string => string = "encodeURIComponent";
+
 type drawerState =
   | Open
   | Closed;
@@ -10,8 +12,7 @@ let make = (~entries) => {
 
   let setSearch = (search, event) => {
     ReactEvent.Mouse.preventDefault(event);
-    // TODO Update nav location to start a new search
-    Js.log(search);
+    ReasonReactRouter.push("/?search=" ++ encodeURIComponent(search))
   };
 
   let toggleDrawer = (topic, event) => {
