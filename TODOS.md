@@ -2,6 +2,7 @@
 
 - Add a "Questions/Keywords/Searches" node under each topic, nesting values
 - Double-click a node to start a new search from it
+- Color-code nodes/edges by relationship type (keyword, search, question, topic)
 
 # Items from Source
 
