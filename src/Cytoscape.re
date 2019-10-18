@@ -6,11 +6,26 @@ and nodeData = {
   label: string,
 };
 
+let makeNode = id => {
+  data: {
+    id,
+    label: id,
+  },
+};
+
 type edge = {data: edgeData}
 and edgeData = {
   source: id,
   target: id,
   label: string,
+};
+
+let makeEdge = (source, target) => {
+  data: {
+    source,
+    target,
+    label: target,
+  },
 };
 
 type elements = {
