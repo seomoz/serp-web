@@ -26,6 +26,11 @@ The front-end is built with
 [ReasonReact](https://reasonml.github.io/reason-react/en/). This means you'll
 have to learn [ReasonML](https://reasonml.github.io/), but it's worth it.
 
+Styles are handled by [Bulma](https://bulma.io/) lightly styled to look like Moz
+colors and typography. Sass only exists in this project to allow for overriding
+of Bulma defaults. Do _not_ try to get crazy with styles or CSS-in-JSS;
+everything should be a class attached to an element to get the layout you want.
+
 The back-end serves as a thin HTTP API wrapper and an asset server -- it is
 about as unfancy as anything you've seen.
 
