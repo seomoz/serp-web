@@ -11,45 +11,57 @@ type status =
   | Returned(string)
   | Done;
 
+type fetchManager = {
+  status,
+  graph: Graph.node,
+};
+
 [@react.component]
 let make = (~search) => {
-  let (status, setStatus) = React.useState(() => NotStarted);
-  let (graph, setSearchGraph) = React.useState(() => Graph.empty);
+  let (manager, updateManager) =
+    React.useState(() => {status: NotStarted, graph: Graph.empty});
 
-  React.useEffect1(
-    () => {
-      setStatus(_ => NotStarted);
-      setSearchGraph(_ => Graph.empty);
+  // TODO figure out why useEffect is causing 2 renders
+  /*
+   React.useEffect1(
+     () => {
+       Js.log(search);
+       switch (search) {
+       | Some(_) =>
+         updateManager(_ => {status: NotStarted, graph: Graph.empty})
+       | None => ()
+       };
 
-      None;
-    },
-    [|search|],
-  );
+       None;
+     },
+     [|search|],
+   );
+   */
 
   // TODO DRY up with SearchResults
-  switch (search, status) {
-  | (None, _) => ()
+  switch (search, manager.status) {
   | (Some(search), NotStarted) =>
-    setSearchGraph(graph => Graph.setSearch(search, graph));
-    setStatus(_ => InFlight);
+    updateManager(manager =>
+      {status: InFlight, graph: Graph.setSearch(search, manager.graph)}
+    );
     Js.Promise.(
       Fetch.fetch("/api/search?keyword=" ++ encodeURIComponent(search))
       |> then_(Fetch.Response.text)
       |> then_(results => {
-           setStatus(_status => Returned(results));
+           updateManager(manager => {...manager, status: Returned(results)});
            resolve();
          })
     )
     |> ignore;
   | (Some(search), Returned(results)) =>
-    setStatus(_ => Done);
+    // TODO  Catch and return as an error in the manager
     let data = results |> Json.parseOrRaise |> Response.Decode.response;
-    Js.log("updating graph");
-    setSearchGraph(graph => Graph.addResult(search, data, graph));
+    let graph = Graph.addResult(search, data, manager.graph);
+    updateManager(_ => {status: Done, graph});
   | (_, _) => ()
   };
 
-  switch (status) {
+  switch (manager.status) {
   | Done =>
     <div>
       <p>
@@ -58,8 +70,26 @@ let make = (~search) => {
         </em>
       </p>
       <Cytoscape
+        cy={cy =>
+          Cytoscape.Instance.onNodes(
+            Cytoscape.Instance.nodes(cy),
+            "tap",
+            event => {
+              ReactEvent.Mouse.stopPropagation(event);
+
+              let node =
+                Cytoscape.Instance.id(ReactEvent.Mouse.target(event));
+              updateManager(manager =>
+                {
+                  ...manager,
+                  graph: Graph.expandNode(node, manager.graph),
+                }
+              );
+            },
+          )
+        }
         elements={
-          graph
+          manager.graph
           |> Graph.cytoscapeElements
           |> Cytoscape.Encode.elements
           |> Cytoscape.normalizeElements
@@ -67,7 +97,7 @@ let make = (~search) => {
         style
         layout
       />
-    </div>
+    </div>;
   | _ => React.null
   };
 };

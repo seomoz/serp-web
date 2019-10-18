@@ -55,6 +55,15 @@ let rec addResult =
     };
   };
 
+let rec expandNode = (search, graph) => {
+  // TODO check for cycles
+  if (graph.search == search) {
+    {...graph, visibility: Expanded};
+  } else {
+    {...graph, children: graph.children |> List.map(expandNode(search))};
+  };
+};
+
 let cytoscapeNodes = (graph: node): list(Cytoscape.node) => {
   let rec walk = (acc, node) => {
     [
@@ -72,6 +81,7 @@ let cytoscapeNodes = (graph: node): list(Cytoscape.node) => {
 };
 
 let cytoscapeEdges = (graph: node): list(Cytoscape.edge) => {
+  // TODO: double-check for cycles or redundant edges
   let rec walk = (acc, source): list(Cytoscape.edge) => {
     [
       // From this node to its children

@@ -93,8 +93,24 @@ module Encode = {
   };
 };
 
+module Instance = {
+  type t;
+  type eles;
+  type handler = ReactEvent.Mouse.t => unit;
+
+  [@bs.send] external nodes: t => eles = "nodes";
+  [@bs.send] external on: (t, string, handler) => unit = "on";
+  [@bs.send] external onNodes: (eles, string, handler) => unit = "on";
+  [@bs.send] external id: (Js.t({..})) => string = "id";
+};
+
 [@bs.module "react-cytoscapejs"] [@react.component]
 external make:
-  (~elements: Js.t({..}), ~style: ReactDOMRe.style, ~layout: Js.Json.t) =>
+  (
+    ~elements: Js.t({..}),
+    ~style: ReactDOMRe.style,
+    ~layout: Js.Json.t,
+    ~cy: Instance.t => unit
+  ) =>
   React.element =
   "default";
