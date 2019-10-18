@@ -22,9 +22,10 @@
     "webpack": "^4.41.0"
   },
   "scripts": {
-    "app:build": "bsb -make-world -clean-world",
-    "app:watch": "bsb -make-world -clean-world -w",
-    "app:webpack": "webpack -w"
+    "app:build": "bsb -clean-world -make-world",
+    "app:watch": "bsb -clean-world -make-world -w",
+    "app:webpack": "webpack -w",
+    "app:build:prod": "bsb -clean-world -make-world && NODE_ENV=production webpack"
   },
   "devDependencies": {
     "webpack-cli": "^3.3.9"

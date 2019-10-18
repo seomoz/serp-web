@@ -1,66 +1,73 @@
 # serp-web
 
-## Run Project
+SERP Web is an experimental proof-of-concept UI for the Feedstore related
+entities API.
 
-```sh
-npm install
-npm start
-# in another tab
-npm run webpack
+To use it, simply enter a search to explore all the related entities Feedstore
+brings back a set of "topics" representing common themes from the SERP and
+related searches.
+
+Each topic has:
+
+- Keywords: suggested related keywords from Moz corpus
+- Questions: common search questions related to the topic extracted from SERP
+  data
+- Searches: common related searches related to the topic extracted from SERP
+  data
+
+The app has two views:
+
+- A tab-and-links view on all the relationships returned from Feedstore.
+  Clicking a related item starts a new search from that term
+- An experimental graph view that visualizes the relationships and progressively
+  reveals the data as you interact
+
+The front-end is built with
+[ReasonReact](https://reasonml.github.io/reason-react/en/). This means you'll
+have to learn [ReasonML](https://reasonml.github.io/), but it's worth it.
+
+The back-end serves as a thin HTTP API wrapper and an asset server -- it is
+about as unfancy as anything you've seen.
+
+# Setting up
+
+Reason's compiler generates JavaScript from `*.re` files. From there we need
+help stitching everything together into a bundle for the browser. Think of how
+Babel and Webpack work together, and you've got the right idea.
+
+First get your dependencies with `yarn install` (or `npm install` if that's how
+you roll).
+
+From there, open 3 CLI tabs to get up and running:
+
+- `./bin/server.js [PORT]` to start the web server. `PORT` is optional and
+  defaults to `4000`
+- `yarn app:watch` to run the Reason compiler. You'll get lots of help here from
+  the compiler figuring out bugs and refactoring code
+- `yarn app:webpack` to run Webpack in watch mode
+
+Open your browser to `localhost:4000` -- or whatever port you chose -- to get
+into the app.
+
+## Development and Editor Settings
+
+The [Reason Documentation](https://reasonml.github.io/docs/en/editor-plugins)
+includes instructions for setting up your editor. Focus on "BuckleScript
+Development" and ignore "Native Development" for this project.
+
+Please use `refmt` on your files. For Vim, these bindings will give you nice
+integration to format your code and provide type hints and documentation if you
+install [vim-reason-plus](https://github.com/reasonml-editor/vim-reason-plus):
+
 ```
-
-After you see the webpack compilation succeed (the `npm run webpack` step), open
-up `build/index.html` (**no server needed!**). Then modify whichever `.re` file
-in `src` and refresh the page to see the changes.
-
-**For more elaborate ReasonReact examples**, please see https://github.com/reasonml-community/reason-react-example
-
-## Run Project with App Server
-
-There is a simple Node server with API endpoints to interact with Feedstore.
-Start that with `./bin/server`.
-
-Typical development will look like running 3 commands:
-
-- `./bin/server.js` to serve app assets and host the API endpoints
-- `yarn run app:build` to recompile Reason code
-- `yarn run app:webpack` to watch for Reason compiler output and bundle it for
-  delivery in the browser
-
-## Run Project with Webpack Server
-
-A webpack server exists for UI-only development -- no back-end routes will be
-available.
-
-To run with the webpack development server run `npm run server` and view in the
-browser at http://localhost:8000. Running in this environment provides hot
-reloading and support for routing; just edit and save the file and the browser
-will automatically refresh.
-
-Note that any hot reload on a route will fall back to the root (`/`), so
-`ReasonReact.Router.dangerouslyGetInitialUrl` will likely be needed alongside
-the `ReasonReact.Router.watchUrl` logic to handle routing correctly on hot
-reload refreshes or simply opening the app at a URL that is not the root.
-
-To use a port other than 8000 set the `PORT` environment variable (`PORT=8080
-npm run server`).
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd : call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+nnoremap <silent> gf :call LanguageClient_textDocument_formatting()<cr>
+```
 
 ## Build for Production
 
 ```sh
-yarn run clean
-yarn run build
-yarn run webpack:production
+yarn run app:build:production
 ```
-
-This will replace the development artifact `build/Index.js` for an optimized
-version as well as copy `src/index.html` into `build/`. You can then deploy the
-contents of the `build` directory (`index.html` and `Index.js`).
-
-If you make use of routing (via `ReasonReact.Router` or similar logic) ensure
-that server-side routing handles your routes or that 404's are directed back to
-`index.html` (which is how the dev server is set up).
-
-**To enable dead code elimination**, change `bsconfig.json`'s `package-specs`
-`module` from `"commonjs"` to `"es6"`. Then re-run the above 2 commands. This
-will allow Webpack to remove unused code.
