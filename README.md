@@ -40,8 +40,12 @@ Reason's compiler generates JavaScript from `*.re` files. From there we need
 help stitching everything together into a bundle for the browser. Think of how
 Babel and Webpack work together, and you've got the right idea.
 
+**Required: You must be on Node v12** (e.g. `nvm install 12 && nvm use 12`)
+
 First get your dependencies with `yarn install` (or `npm install` if that's how
 you roll).
+
+Next: run `yarn app:build` to make sure everything necessary for webpack is pre-built.
 
 From there, open 3 CLI tabs to get up and running:
 
